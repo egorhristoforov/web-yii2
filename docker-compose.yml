@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    restart: unless-stopped
+    ports:
+      - "3336:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: yii-db
+    volumes:
+      - yii-mysql-data:/var/lib/mysql
+
+  app:
+    build: 
+      context: ./yii
+    restart: unless-stopped
+    ports: 
+      - "80:80"
+    depends_on: 
+      - db    
+    volumes:
+      - "./yii/app:/var/www/app"
+      - "./yii/nginx:/etc/nginx/sites-available"
+volumes:
+  yii-mysql-data:
